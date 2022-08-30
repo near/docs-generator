@@ -6,3 +6,4 @@ git pull
 yarn install
 yarn build
 cd ../../
+mkdir docs
