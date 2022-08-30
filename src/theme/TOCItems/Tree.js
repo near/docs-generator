@@ -29,7 +29,7 @@ const getIcon = title => {
       break;
   }
   return <span className={iconClassName}></span>;
-}
+};
 const getLinkClassName = (linkClassName, parentValue) => {
   if (['Properties', 'Methods', 'Constructors', 'Variables', 'Functions',
     'Type Aliases','Enumeration Members',
@@ -38,7 +38,7 @@ const getLinkClassName = (linkClassName, parentValue) => {
   } else {
     return `${linkClassName || ''}`;
   }
-}
+};
 function TOCItemTree({toc, className, linkClassName, isChild, parentValue}) {
   if (!toc.length) {
     return null;

@@ -5,54 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import clsx from 'clsx';
-import Link from '@docusaurus/Link';
 import { useThemeConfig } from '@docusaurus/theme-common';
-import useBaseUrl from '@docusaurus/useBaseUrl';
-import isInternalUrl from '@docusaurus/isInternalUrl';
-import styles from './styles.module.css';
-import ThemedImage from '@theme/ThemedImage';
-//import IconExternalLink from '@theme/IconExternalLink';
-
-function FooterLink({ to, href, label, prependBaseUrlToHref, ...props }) {
-  const toUrl = useBaseUrl(to);
-  const normalizedHref = useBaseUrl(href, {
-    forcePrependBaseUrl: true,
-  });
-  return (
-    <Link
-      className="footer__link-item"
-      {...(href
-        ? {
-          href: prependBaseUrlToHref ? normalizedHref : href,
-        }
-        : {
-          to: toUrl,
-        })}
-      {...props}>
-      {href && !isInternalUrl(href) ? (
-        <span>
-          {label}
-          <IconExternalLink />
-        </span>
-      ) : (
-        label
-      )}
-    </Link>
-  );
-}
-
-const FooterLogo = ({ sources, alt }) => (
-  <ThemedImage className="footer__logo" alt={alt} sources={sources} />
-);
 
 function Footer() {
   const { footer } = useThemeConfig();
-  const { copyright, links = [], logo = {} } = footer || {};
-  const sources = {
-    light: useBaseUrl(logo.src),
-    dark: useBaseUrl(logo.srcDark || logo.src),
-  };
 
   if (!footer) {
     return null;
@@ -60,11 +16,11 @@ function Footer() {
 
   return (
     <footer className="relative pt-100 pb-40 md:pb-100 bg-black text-white mt-150">
-      <div className="absolute pin-t pin-r" style={{ maxWidth: "50vw" }}>
+      <div className="absolute pin-t pin-r" style={{ maxWidth: '50vw' }}>
         <img
           src="https://near.org/wp-content/themes/near-19/assets/img/neue/distortion-footer.svg?t=1600963469"
           className="locked"
-          style={{ transform: "translateY(-60%)" }}
+          style={{ transform: 'translateY(-60%)' }}
           alt=""
         ></img>
       </div>
@@ -106,14 +62,14 @@ function Footer() {
               </li>
             </ul>
           </div>
-          <div className="col md:w-3/4 mt-50 md:mt-0" style={{ zIndex: "1" }}>
+          <div className="col md:w-3/4 mt-50 md:mt-0" style={{ zIndex: '1' }}>
             <ul className="list-reset flex flex-wrap -mx-20">
               <li className="mx-20">
                 <a
                   href="https://gov.near.org"
                   className="block hover:text-discourse"
                   target="_blank"
-                  id="discourse-1"
+                  id="discourse-1" rel="noreferrer"
                 >
                   <span className="icon icon-36">
                     <svg
@@ -131,7 +87,7 @@ function Footer() {
                 <a
                   href="https://twitter.com/nearprotocol"
                   className="block hover:text-twitter"
-                  target="_blank"
+                  target="_blank" rel="noreferrer"
                 >
                   <span className="icon icon-36 ">
                     <svg
@@ -148,7 +104,7 @@ function Footer() {
                 <a
                   href="https://github.com/near"
                   className="block hover:text-github"
-                  target="_blank"
+                  target="_blank" rel="noreferrer"
                 >
                   <span className="icon icon-36 ">
                     <svg
@@ -167,7 +123,7 @@ function Footer() {
                 <a
                   href="http://near.chat"
                   className="block hover:text-discord"
-                  target="_blank"
+                  target="_blank" rel="noreferrer"
                 >
                   <span className="icon icon-36 ">
                     <svg
@@ -184,7 +140,7 @@ function Footer() {
                 <a
                   href="https://t.me/cryptonear"
                   className="block hover:text-telegram"
-                  target="_blank"
+                  target="_blank" rel="noreferrer"
                 >
                   <span className="icon icon-36 ">
                     <svg
@@ -201,7 +157,7 @@ function Footer() {
                 <a
                   href="https://near.org/wechat"
                   className="block hover:text-wechat"
-                  target="_blank"
+                  target="_blank" rel="noreferrer"
                 >
                   <span className="icon icon-36 ">
                     <svg
@@ -218,7 +174,7 @@ function Footer() {
                 <a
                   href="https://www.youtube.com/channel/UCuKdIYVN8iE3fv8alyk1aMw"
                   className="block hover:text-youtube"
-                  target="_blank"
+                  target="_blank" rel="noreferrer"
                 >
                   <span className="icon icon-36 ">
                     <svg

@@ -12,7 +12,8 @@
     "serve": "./dev.sh serve",
     "write-translations": "./dev.sh write-translations",
     "write-heading-ids": "./dev.sh write-heading-ids",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@docusaurus/core": "2.0.1",
@@ -31,7 +32,7 @@
     "typedoc": "0.23.11",
     "typedoc-plugin-markdown": "3.13.4",
     "typescript": "^4.7.4",
-    "eslint": "^8.20.0",
+    "eslint": "8.22.0",
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.6.1",
