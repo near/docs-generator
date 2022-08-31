@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "publish-github": "cd publish && tsc && node index.js",
     "build-production": "docusaurus build",
     "dev-prepare": "./dev-prepare.sh",
     "start": "./dev.sh start",
