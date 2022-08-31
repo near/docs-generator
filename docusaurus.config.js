@@ -83,6 +83,10 @@ const config = {
             require.resolve('./src/css/customTheme.css'),
           ],
         },
+        googleAnalytics: {
+          trackingID: 'G-QSBR7X2LN9',
+          anonymizeIP: true,
+        },
       }),
     ],
   ],
