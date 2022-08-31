@@ -10,9 +10,9 @@ on:
         required: true
         type: choice
         options:
-          - @near/near-api-js
-          - @near/near-cli
-          - @near/near-sdk-js
+          - '@near/near-api-js'
+          - '@near/near-cli'
+          - '@near/near-sdk-js'
       tags:
         description: 'Tag'
         required: false
