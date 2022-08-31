@@ -1,7 +1,7 @@
 import {publish} from './publish';
 
 (async function() {
-  console.log(JSON.stringify(process.argv));
+  console.log(process.env.GITHUB_CONTEXT);
   // const ghEvent = process.argv[2];
   // if (ghEvent) {
   //   const parsedEvent = JSON.parse(ghEvent);
