@@ -34,4 +34,4 @@ jobs:
           yarn install
       - name: Publish
         run: |
-          yarn publish-github ${{ github.event }}
+          yarn publish-github "${{ toJSON(github.event) }}"
