@@ -1,0 +1,21 @@
+name: 'Generate docs'
+description: 'Generate docs for NEAR'
+branding:
+  icon: book-open
+  color: green
+inputs:
+  docs-source:
+    description: 'Source repo to generate docs for'
+    required: true
+  release-version:
+    description: 'Release version'
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Run generator
+      shell: bash
+      run: |
+        cd action
+        yarn install
+        yarn start
