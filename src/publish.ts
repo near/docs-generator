@@ -1,3 +1,4 @@
+import * as core from '@actions/core';
 import {Api} from '@octokit/plugin-rest-endpoint-methods/dist-types/types';
 import type {GitHub} from '@actions/github/lib/utils';
 import {BASE_BRANCH, DocsSource, ReleaseVersion, Source} from './types';
@@ -30,24 +31,28 @@ const sources: Record<DocsSource, Source> = {
 };
 
 
-export const publish = async (octokit: typeof GitHub & Api, docsSource: DocsSource, releaseVersion: ReleaseVersion) => {
+export const publish = async (oct: typeof GitHub & Api, docsSource: DocsSource, releaseVersion: ReleaseVersion) => {
   const ts = Date.now();
   const {repo, owner} = github.context.repo;
-  // const {data: pullRequest} = await octokit.rest.pulls.list({
+  core.info(`ts ${ts} repo ${repo} owner ${owner} docsSource ${docsSource} releaseVersion ${releaseVersion}`);
+  // const {data: pullRequest} = await oct.rest.pulls.list({
   //   owner,
   //   repo,
   // });
-  // const searchPrs = await octokit.rest.search.issuesAndPullRequests({
+  // const searchPrs = await oct.rest.search.issuesAndPullRequests({
   //   q: `repo:${owner}/${repo} type:pr label:dependency`,
   // })
-  const committed = await uploadToRepo(octokit,
-    path.resolve('./test-code'),
-    owner, repo, `docs-generator-test-${ts}`
+  const uploadPath = path.resolve('./test-code');
+  const branch = `docs-generator-test-${ts}`;
+  core.info(`uploadPath ${uploadPath} branch ${branch}`);
+  const committed = await uploadToRepo(oct,
+    uploadPath,
+    owner, repo, branch,
   );
   console.log(committed);
-  const prCreated = await octokit.rest.pulls.create({
+  const prCreated = await oct.rest.pulls.create({
     owner, repo, title: `docs-generator test ${ts}`,
-    head: `docs-generator-test-${ts}`,
+    head: branch,
     base: BASE_BRANCH
   });
   console.log(prCreated);

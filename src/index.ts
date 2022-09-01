@@ -19,9 +19,9 @@ const restGithub = GitHub.plugin(restEndpointMethods);
     const docsSource = core.getInput('docs_source') as DocsSource;
     const releaseVersion = core.getInput('release_version') as ReleaseVersion;
     const githubToken = core.getInput('github_token');
-    const octokit = new restGithub(githubToken);
+    const oct = new restGithub(githubToken);
     console.log(`building ${docsSource}@${releaseVersion}`);
-    await publish(octokit, docsSource, releaseVersion);
+    await publish(oct, docsSource, releaseVersion);
 
   } catch (error) {
     core.setFailed(error.message);

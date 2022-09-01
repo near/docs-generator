@@ -34,6 +34,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.publish = void 0;
+const core = __importStar(__nccwpck_require__(2186));
 const types_1 = __nccwpck_require__(8631);
 const github = __importStar(__nccwpck_require__(5438));
 const push_code_1 = __nccwpck_require__(8110);
@@ -61,21 +62,25 @@ const sources = {
         tagsToPublish: [],
     },
 };
-const publish = async (octokit, docsSource, releaseVersion) => {
+const publish = async (oct, docsSource, releaseVersion) => {
     const ts = Date.now();
     const { repo, owner } = github.context.repo;
-    // const {data: pullRequest} = await octokit.rest.pulls.list({
+    core.info(`ts ${ts} repo ${repo} owner ${owner} docsSource ${docsSource} releaseVersion ${releaseVersion}`);
+    // const {data: pullRequest} = await oct.rest.pulls.list({
     //   owner,
     //   repo,
     // });
-    // const searchPrs = await octokit.rest.search.issuesAndPullRequests({
+    // const searchPrs = await oct.rest.search.issuesAndPullRequests({
     //   q: `repo:${owner}/${repo} type:pr label:dependency`,
     // })
-    const committed = await (0, push_code_1.uploadToRepo)(octokit, path_1.default.resolve('./test-code'), owner, repo, `docs-generator-test-${ts}`);
+    const uploadPath = path_1.default.resolve('./test-code');
+    const branch = `docs-generator-test-${ts}`;
+    core.info(`uploadPath ${uploadPath} branch ${branch}`);
+    const committed = await (0, push_code_1.uploadToRepo)(oct, uploadPath, owner, repo, branch);
     console.log(committed);
-    const prCreated = await octokit.rest.pulls.create({
+    const prCreated = await oct.rest.pulls.create({
         owner, repo, title: `docs-generator test ${ts}`,
-        head: `docs-generator-test-${ts}`,
+        head: branch,
         base: types_1.BASE_BRANCH
     });
     console.log(prCreated);
@@ -148,19 +153,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.uploadToRepo = void 0;
+const core = __importStar(__nccwpck_require__(2186));
 const glob = __importStar(__nccwpck_require__(8090));
 const path_1 = __importDefault(__nccwpck_require__(1017));
 const fs = __importStar(__nccwpck_require__(7147));
 const uploadToRepo = async (octo, coursePath, org, repo, branch = `master`) => {
     // gets commit's AND its tree's SHA
     const currentCommit = await getCurrentCommit(octo, org, repo, branch);
+    core.info(`currentCommit ${JSON.stringify(currentCommit)}`);
     const globber = await glob.create(coursePath);
     const filesPaths = await globber.glob();
+    core.info(`filesPaths ${JSON.stringify(filesPaths)}`);
     const filesBlobs = await Promise.all(filesPaths.map(createBlobForFile(octo, org, repo)));
     const pathsForBlobs = filesPaths.map(fullPath => path_1.default.relative(coursePath, fullPath));
+    core.info(`pathsForBlobs ${JSON.stringify(pathsForBlobs)}`);
     const newTree = await createNewTree(octo, org, repo, filesBlobs, pathsForBlobs, currentCommit.treeSha);
+    core.info(`newTree ${JSON.stringify(newTree)}`);
     const commitMessage = `testing commit`;
     const newCommit = await createNewCommit(octo, org, repo, commitMessage, newTree.sha, currentCommit.commitSha);
+    core.info(`newCommit ${JSON.stringify(newCommit)}`);
     await setBranchToCommit(octo, org, repo, branch, newCommit.sha);
 };
 exports.uploadToRepo = uploadToRepo;
@@ -185,6 +196,7 @@ const getCurrentCommit = async (octo, org, repo, branch = 'master') => {
 const getFileAsUTF8 = (filePath) => fs.readFile.__promisify__(filePath, 'utf8');
 const createBlobForFile = (octo, org, repo) => async (filePath) => {
     const content = await getFileAsUTF8(filePath);
+    core.info(`createBlobForFile filePath ${filePath} content ${JSON.stringify(content)}`);
     const blobData = await octo.rest.git.createBlob({
         owner: org,
         repo,
@@ -73254,9 +73266,9 @@ const restGithub = utils_1.GitHub.plugin(restEndpointMethods);
         const docsSource = core.getInput('docs_source');
         const releaseVersion = core.getInput('release_version');
         const githubToken = core.getInput('github_token');
-        const octokit = new restGithub(githubToken);
+        const oct = new restGithub(githubToken);
         console.log(`building ${docsSource}@${releaseVersion}`);
-        await (0, publish_1.publish)(octokit, docsSource, releaseVersion);
+        await (0, publish_1.publish)(oct, docsSource, releaseVersion);
     }
     catch (error) {
         core.setFailed(error.message);

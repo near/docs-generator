@@ -22,10 +22,13 @@ export const uploadToRepo = async (
 ) => {
   // gets commit's AND its tree's SHA
   const currentCommit = await getCurrentCommit(octo, org, repo, branch)
+  core.info(`currentCommit ${JSON.stringify(currentCommit)}`);
   const globber = await glob.create(coursePath);
   const filesPaths = await globber.glob();
+  core.info(`filesPaths ${JSON.stringify(filesPaths)}`);
   const filesBlobs = await Promise.all(filesPaths.map(createBlobForFile(octo, org, repo)))
   const pathsForBlobs = filesPaths.map(fullPath => path.relative(coursePath, fullPath))
+  core.info(`pathsForBlobs ${JSON.stringify(pathsForBlobs)}`);
   const newTree = await createNewTree(
     octo,
     org,
@@ -33,7 +36,8 @@ export const uploadToRepo = async (
     filesBlobs,
     pathsForBlobs,
     currentCommit.treeSha
-  )
+  );
+  core.info(`newTree ${JSON.stringify(newTree)}`);
   const commitMessage = `testing commit`
   const newCommit = await createNewCommit(
     octo,
@@ -43,6 +47,7 @@ export const uploadToRepo = async (
     newTree.sha,
     currentCommit.commitSha
   )
+  core.info(`newCommit ${JSON.stringify(newCommit)}`);
   await setBranchToCommit(octo, org, repo, branch, newCommit.sha)
 }
 
@@ -77,6 +82,7 @@ const createBlobForFile = (octo: typeof GitHub & Api, org: string, repo: string)
   filePath: string
 ) => {
   const content = await getFileAsUTF8(filePath)
+  core.info(`createBlobForFile filePath ${filePath} content ${JSON.stringify(content)}`);
   const blobData = await octo.rest.git.createBlob({
     owner: org,
     repo,
