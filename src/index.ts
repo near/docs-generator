@@ -16,9 +16,13 @@ const restGithub = GitHub.plugin(restEndpointMethods);
 
 (async () => {
   try {
-    const docsSource = core.getInput('docs_source') as DocsSource;
-    const releaseVersion = core.getInput('release_version') as ReleaseVersion;
-    const githubToken = core.getInput('github_token');
+    // const docsSource = core.getInput('docs_source') as DocsSource;
+    // const releaseVersion = core.getInput('release_version') as ReleaseVersion;
+    // const githubToken = core.getInput('github_token');
+    console.log(process.argv);
+    const docsSource = process.argv[2] as DocsSource;
+    const releaseVersion = process.argv[3] as ReleaseVersion;
+    const githubToken = process.argv[4];
     const options = getOctokitOptions(githubToken, {
       log: {
         debug: (...args: unknown[]) => console.warn(...args),

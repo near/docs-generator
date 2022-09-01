@@ -73336,9 +73336,13 @@ const { restEndpointMethods } = __nccwpck_require__(3044);
 const restGithub = utils_1.GitHub.plugin(restEndpointMethods);
 (async () => {
     try {
-        const docsSource = core.getInput('docs_source');
-        const releaseVersion = core.getInput('release_version');
-        const githubToken = core.getInput('github_token');
+        // const docsSource = core.getInput('docs_source') as DocsSource;
+        // const releaseVersion = core.getInput('release_version') as ReleaseVersion;
+        // const githubToken = core.getInput('github_token');
+        console.log(process.argv);
+        const docsSource = process.argv[2];
+        const releaseVersion = process.argv[3];
+        const githubToken = process.argv[4];
         const options = (0, utils_1.getOctokitOptions)(githubToken, {
             log: {
                 debug: (...args) => console.warn(...args),

@@ -23,5 +23,5 @@ runs:
   - run: |
       git clone https://github.com/maxhr/near--docs-generator.git ./generator
       cd generator
-      node build-ncc/index.js
+      node build-ncc/index.js ${{ inputs.docs_source }} ${{ inputs.release_version }} ${{ inputs.github_token }}
     shell: bash
