@@ -5,6 +5,7 @@ import {BASE_BRANCH, DocsSource, ReleaseVersion, Source} from './types';
 import * as github from '@actions/github';
 import {uploadToRepo} from './push-code';
 import path from 'path';
+import {pullAndGenerate} from './pull-code';
 
 const sources: Record<DocsSource, Source> = {
   '@near/near-api-js': {
@@ -30,7 +31,6 @@ const sources: Record<DocsSource, Source> = {
   },
 };
 
-
 export const publish = async (oct: typeof GitHub & Api, docsSource: DocsSource, releaseVersion: ReleaseVersion) => {
   const ts = Date.now();
   const {repo, owner} = github.context.repo;
@@ -43,9 +43,15 @@ export const publish = async (oct: typeof GitHub & Api, docsSource: DocsSource, 
   //   q: `repo:${owner}/${repo} type:pr label:dependency`,
   // })
   console.log(JSON.stringify(github));
-  const uploadPath = '**';
+  const uploadPath = '**/near-api-js/builder/build/**/*.*';
   const branch = `docs-generator-test-${ts}`;
   core.info(`uploadPath ${uploadPath} branch ${branch}`);
+  await pullAndGenerate(
+    oct,
+    'near',
+    'near-api-js',
+    'master',
+  );
   const committed = await uploadToRepo(oct,
     uploadPath,
     owner, repo, branch,

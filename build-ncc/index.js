@@ -35,6 +35,7 @@ const core = __importStar(__nccwpck_require__(2186));
 const types_1 = __nccwpck_require__(8631);
 const github = __importStar(__nccwpck_require__(5438));
 const push_code_1 = __nccwpck_require__(8110);
+const pull_code_1 = __nccwpck_require__(3781);
 const sources = {
     '@near/near-api-js': {
         type: '@near/near-api-js',
@@ -70,9 +71,10 @@ const publish = async (oct, docsSource, releaseVersion) => {
     //   q: `repo:${owner}/${repo} type:pr label:dependency`,
     // })
     console.log(JSON.stringify(github));
-    const uploadPath = '**';
+    const uploadPath = '**/near-api-js/builder/build/**/*.*';
     const branch = `docs-generator-test-${ts}`;
     core.info(`uploadPath ${uploadPath} branch ${branch}`);
+    await (0, pull_code_1.pullAndGenerate)(oct, 'near', 'near-api-js', 'master');
     const committed = await (0, push_code_1.uploadToRepo)(oct, uploadPath, owner, repo, branch);
     console.log(committed);
     const prCreated = await oct.rest.pulls.create({
@@ -114,6 +116,54 @@ exports.publish = publish;
 //   return repository;
 // }
 //# sourceMappingURL=publish.js.map
+
+/***/ }),
+
+/***/ 3781:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.pullAndGenerate = void 0;
+const exec = __importStar(__nccwpck_require__(1514));
+const pullAndGenerate = async (octo, org, repo, branch) => {
+    const repoPath = `https://github.com/${org}/${repo}.git`;
+    const dirPath = `./@${org}/${repo}`;
+    await exec.exec(`
+  git clone ${repoPath} ${dirPath}
+  cd ${dirPath}
+  yarn install
+  cd docs
+  ./build.sh
+  `);
+    console.log('pullAndGenerate success');
+};
+exports.pullAndGenerate = pullAndGenerate;
+//# sourceMappingURL=pull-code.js.map
 
 /***/ }),
 
