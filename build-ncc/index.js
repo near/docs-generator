@@ -29,9 +29,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.publish = void 0;
+const types_1 = __nccwpck_require__(8631);
 const github = __importStar(__nccwpck_require__(5438));
+const push_code_1 = __nccwpck_require__(8110);
+const path_1 = __importDefault(__nccwpck_require__(1017));
 const sources = {
     '@near/near-api-js': {
         type: '@near/near-api-js',
@@ -56,23 +62,23 @@ const sources = {
     },
 };
 const publish = async (octokit, docsSource, releaseVersion) => {
+    const ts = Date.now();
     const { repo, owner } = github.context.repo;
     // const {data: pullRequest} = await octokit.rest.pulls.list({
     //   owner,
     //   repo,
     // });
-    const data = await octokit.rest.search.issuesAndPullRequests({
-        q: `repo:${owner}/${repo} type:pr label:dependency`,
+    // const searchPrs = await octokit.rest.search.issuesAndPullRequests({
+    //   q: `repo:${owner}/${repo} type:pr label:dependency`,
+    // })
+    const committed = await (0, push_code_1.uploadToRepo)(octokit, path_1.default.resolve('./test-code'), owner, repo, `docs-generator-test-${ts}`);
+    console.log(committed);
+    const prCreated = await octokit.rest.pulls.create({
+        owner, repo, title: `docs-generator test ${ts}`,
+        head: `docs-generator-test-${ts}`,
+        base: types_1.BASE_BRANCH
     });
-    console.log(data);
-    // gql = graphql.defaults({
-    //   headers: {
-    //     authorization: `token ${process.env.GITHUB_ACCESS_TOKEN}`,
-    //   },
-    // });
-    // const source = sources[sourceId];
-    // const releases = await getReleases(source.org, source.repo);
-    // const docsPrs = await getDocsPrs();
+    console.log(prCreated);
 };
 exports.publish = publish;
 // const getReleases = async (org: string, repo: string) => {
@@ -106,6 +112,130 @@ exports.publish = publish;
 //   return repository;
 // }
 //# sourceMappingURL=publish.js.map
+
+/***/ }),
+
+/***/ 8110:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.uploadToRepo = void 0;
+const glob = __importStar(__nccwpck_require__(8090));
+const path_1 = __importDefault(__nccwpck_require__(1017));
+const fs = __importStar(__nccwpck_require__(7147));
+const uploadToRepo = async (octo, coursePath, org, repo, branch = `master`) => {
+    // gets commit's AND its tree's SHA
+    const currentCommit = await getCurrentCommit(octo, org, repo, branch);
+    const globber = await glob.create(coursePath);
+    const filesPaths = await globber.glob();
+    const filesBlobs = await Promise.all(filesPaths.map(createBlobForFile(octo, org, repo)));
+    const pathsForBlobs = filesPaths.map(fullPath => path_1.default.relative(coursePath, fullPath));
+    const newTree = await createNewTree(octo, org, repo, filesBlobs, pathsForBlobs, currentCommit.treeSha);
+    const commitMessage = `testing commit`;
+    const newCommit = await createNewCommit(octo, org, repo, commitMessage, newTree.sha, currentCommit.commitSha);
+    await setBranchToCommit(octo, org, repo, branch, newCommit.sha);
+};
+exports.uploadToRepo = uploadToRepo;
+const getCurrentCommit = async (octo, org, repo, branch = 'master') => {
+    const { data: refData } = await octo.rest.git.getRef({
+        owner: org,
+        repo,
+        ref: `heads/${branch}`,
+    });
+    const commitSha = refData.object.sha;
+    const { data: commitData } = await octo.rest.git.getCommit({
+        owner: org,
+        repo,
+        commit_sha: commitSha,
+    });
+    return {
+        commitSha,
+        treeSha: commitData.tree.sha,
+    };
+};
+// Notice that readFile's utf8 is typed differently from Github's utf-8
+const getFileAsUTF8 = (filePath) => fs.readFile.__promisify__(filePath, 'utf8');
+const createBlobForFile = (octo, org, repo) => async (filePath) => {
+    const content = await getFileAsUTF8(filePath);
+    const blobData = await octo.rest.git.createBlob({
+        owner: org,
+        repo,
+        content,
+        encoding: 'utf-8',
+    });
+    return blobData.data;
+};
+const createNewTree = async (octo, owner, repo, blobs, paths, parentTreeSha) => {
+    // My custom config. Could be taken as parameters
+    const tree = blobs.map(({ sha }, index) => ({
+        path: paths[index],
+        mode: `100644`,
+        type: `blob`,
+        sha,
+    }));
+    //@ts-ignore
+    const { data } = await octo.rest.git.createTree({
+        owner,
+        repo,
+        tree,
+        base_tree: parentTreeSha,
+    });
+    return data;
+};
+const createNewCommit = async (octo, org, repo, message, currentTreeSha, currentCommitSha) => (await octo.rest.git.createCommit({
+    owner: org,
+    repo,
+    message,
+    tree: currentTreeSha,
+    parents: [currentCommitSha],
+})).data;
+const setBranchToCommit = (octo, org, repo, branch = `master`, commitSha) => octo.rest.git.updateRef({
+    owner: org,
+    repo,
+    ref: `heads/${branch}`,
+    sha: commitSha,
+});
+//# sourceMappingURL=push-code.js.map
+
+/***/ }),
+
+/***/ 8631:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.BASE_BRANCH = void 0;
+exports.BASE_BRANCH = 'main';
+//# sourceMappingURL=types.js.map
 
 /***/ }),
 

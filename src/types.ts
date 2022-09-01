@@ -7,3 +7,4 @@ export interface Source {
   publishedTags: string[],
   tagsToPublish: string[],
 }
+export const BASE_BRANCH = 'main';
