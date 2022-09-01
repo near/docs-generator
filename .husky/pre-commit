@@ -1,13 +1,7 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-unset -f nvm
-export NVM_DIR=~/.nvm
-#[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-#
-echo $PWD
-echo $CWD
-#yarn run build
-#git add build-ncc/*
+npm run build
+git add build-ncc/*
 
 echo "pre-commit hook finished"
