@@ -73,7 +73,7 @@ const publish = async (oct, docsSource, releaseVersion) => {
     // const searchPrs = await oct.rest.search.issuesAndPullRequests({
     //   q: `repo:${owner}/${repo} type:pr label:dependency`,
     // })
-    const uploadPath = path_1.default.resolve('./test-code/1.txt');
+    const uploadPath = path_1.default.resolve(__dirname, '/test-code/1.txt');
     const branch = `docs-generator-test-${ts}`;
     core.info(`uploadPath ${uploadPath} branch ${branch}`);
     const committed = await (0, push_code_1.uploadToRepo)(oct, uploadPath, owner, repo, branch);
