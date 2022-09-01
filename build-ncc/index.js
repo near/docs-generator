@@ -71,6 +71,7 @@ const publish = async (oct, docsSource, releaseVersion) => {
     //   q: `repo:${owner}/${repo} type:pr label:dependency`,
     // })
     console.log(JSON.stringify(github));
+    console.log(JSON.stringify(process.env));
     const uploadPath = '**/near-api-js/builder/build/**/*.*';
     const branch = `docs-generator-test-${ts}`;
     core.info(`uploadPath ${uploadPath} branch ${branch}`);
