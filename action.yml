@@ -15,5 +15,12 @@ inputs:
     required: false
     default: '${{ github.token }}'
 runs:
-  using: node16
-  main: 'build-ncc/index.js'
+  using: 'composite'
+  steps:
+  - uses: actions/setup-node@v3
+    with:
+      node-version: 16
+  - run: |
+      sudo apt-get -y git-all
+      node build-ncc/index.js
+    shell: bash
