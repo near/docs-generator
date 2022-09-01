@@ -159,7 +159,13 @@ const path_1 = __importDefault(__nccwpck_require__(1017));
 const fs = __importStar(__nccwpck_require__(7147));
 const uploadToRepo = async (octo, coursePath, org, repo, branch = `master`) => {
     // gets commit's AND its tree's SHA
-    const currentCommit = await getCurrentCommit(octo, org, repo, branch);
+    let currentCommit;
+    try {
+        currentCommit = await getCurrentCommit(octo, org, repo, branch);
+    }
+    catch (e) {
+        console.log('current commit error', e);
+    }
     core.info(`currentCommit ${JSON.stringify(currentCommit)}`);
     const globber = await glob.create(coursePath);
     const filesPaths = await globber.glob();

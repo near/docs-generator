@@ -21,7 +21,12 @@ export const uploadToRepo = async (
   branch: string = `master`
 ) => {
   // gets commit's AND its tree's SHA
-  const currentCommit = await getCurrentCommit(octo, org, repo, branch)
+  let currentCommit;
+  try {
+    currentCommit = await getCurrentCommit(octo, org, repo, branch)
+  } catch(e) {
+    console.log('current commit error', e);
+  }
   core.info(`currentCommit ${JSON.stringify(currentCommit)}`);
   const globber = await glob.create(coursePath);
   const filesPaths = await globber.glob();
