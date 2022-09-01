@@ -60,7 +60,7 @@ const sources = {
     },
 };
 const publish = async (oct, docsSource, releaseVersion) => {
-    const ts = Date.now();
+    const ts = '123';
     const { repo, owner } = github.context.repo;
     core.info(`ts ${ts} repo ${repo} owner ${owner} docsSource ${docsSource} releaseVersion ${releaseVersion}`);
     // const {data: pullRequest} = await oct.rest.pulls.list({
