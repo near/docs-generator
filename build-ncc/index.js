@@ -216,7 +216,16 @@ const uploadToRepo = async (octo, coursePath, org, repo, branch = `master`) => {
     }
     core.info(`currentCommit ${JSON.stringify(currentCommit)}`);
     const globber = await glob.create(coursePath, { followSymbolicLinks: false });
-    const filesPaths = await globber.glob();
+    const filesAndDirsPaths = await globber.glob();
+    const filesPaths = (await Promise.all(filesAndDirsPaths.map(async (f) => {
+        const lstat = await fs_1.promises.lstat(f);
+        if (lstat.isFile()) {
+            return f;
+        }
+        else {
+            return null;
+        }
+    }))).filter(f => f !== null);
     console.log(`globber count ${filesPaths.length}`);
     let filesBlobs;
     try {
