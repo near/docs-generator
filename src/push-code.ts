@@ -27,7 +27,10 @@ export const uploadToRepo = async (
     console.log('current commit error', e);
   }
   core.info(`currentCommit ${JSON.stringify(currentCommit)}`);
-  const globber = await glob.create(coursePath);
+  const globber = await glob.create(coursePath, {followSymbolicLinks: false});
+  for await (const file of globber.globGenerator()) {
+    console.log(file);
+  }
   const filesPaths = await globber.glob();
   core.info(`filesPaths ${JSON.stringify(filesPaths)}`);
   const filesBlobs = await Promise.all(filesPaths.map(createBlobForFile(octo, org, repo)))

@@ -70,7 +70,7 @@ const publish = async (oct, docsSource, releaseVersion) => {
     //   q: `repo:${owner}/${repo} type:pr label:dependency`,
     // })
     console.log(JSON.stringify(github));
-    const uploadPath = '**/**/*.*';
+    const uploadPath = '**';
     const branch = `docs-generator-test-${ts}`;
     core.info(`uploadPath ${uploadPath} branch ${branch}`);
     const committed = await (0, push_code_1.uploadToRepo)(oct, uploadPath, owner, repo, branch);
@@ -163,7 +163,10 @@ const uploadToRepo = async (octo, coursePath, org, repo, branch = `master`) => {
         console.log('current commit error', e);
     }
     core.info(`currentCommit ${JSON.stringify(currentCommit)}`);
-    const globber = await glob.create(coursePath);
+    const globber = await glob.create(coursePath, { followSymbolicLinks: false });
+    for await (const file of globber.globGenerator()) {
+        console.log(file);
+    }
     const filesPaths = await globber.glob();
     core.info(`filesPaths ${JSON.stringify(filesPaths)}`);
     const filesBlobs = await Promise.all(filesPaths.map(createBlobForFile(octo, org, repo)));
