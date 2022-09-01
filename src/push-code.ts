@@ -23,7 +23,7 @@ export const uploadToRepo = async (
   let currentCommit;
   try {
     currentCommit = await getCurrentCommit(octo, org, repo, 'master')
-  } catch(e) {
+  } catch (e) {
     console.log('current commit error', e);
   }
   core.info(`currentCommit ${JSON.stringify(currentCommit)}`);
@@ -33,26 +33,41 @@ export const uploadToRepo = async (
   const filesBlobs = await Promise.all(filesPaths.map(createBlobForFile(octo, org, repo)))
   const pathsForBlobs = filesPaths.map(fullPath => path.relative(coursePath, fullPath))
   core.info(`pathsForBlobs ${JSON.stringify(pathsForBlobs)}`);
-  const newTree = await createNewTree(
-    octo,
-    org,
-    repo,
-    filesBlobs,
-    pathsForBlobs,
-    currentCommit.treeSha
-  );
+  let newTree;
+  try {
+    newTree = await createNewTree(
+      octo,
+      org,
+      repo,
+      filesBlobs,
+      pathsForBlobs,
+      currentCommit.treeSha
+    );
+  } catch (e) {
+    console.log('createNewTree error', e);
+  }
   core.info(`newTree ${JSON.stringify(newTree)}`);
   const commitMessage = `testing commit`
-  const newCommit = await createNewCommit(
-    octo,
-    org,
-    repo,
-    commitMessage,
-    newTree.sha,
-    currentCommit.commitSha
-  )
+  let newCommit;
+  try {
+    newCommit = await createNewCommit(
+      octo,
+      org,
+      repo,
+      commitMessage,
+      newTree.sha,
+      currentCommit.commitSha
+    )
+  } catch (e) {
+    console.log('createNewCommit error', e);
+  }
+
   core.info(`newCommit ${JSON.stringify(newCommit)}`);
-  await setBranchToCommit(octo, org, repo, branch, newCommit.sha)
+  try {
+    await setBranchToCommit(octo, org, repo, branch, newCommit.sha)
+  } catch (e) {
+    console.log('setBranchToCommit error', e);
+  }
 }
 
 
@@ -62,13 +77,13 @@ const getCurrentCommit = async (
   repo: string,
   branch: string = 'master'
 ) => {
-  const { data: refData } = await octo.rest.git.getRef({
+  const {data: refData} = await octo.rest.git.getRef({
     owner: org,
     repo,
     ref: `heads/${branch}`,
   })
   const commitSha = refData.object.sha
-  const { data: commitData } = await octo.rest.git.getCommit({
+  const {data: commitData} = await octo.rest.git.getCommit({
     owner: org,
     repo,
     commit_sha: commitSha,
@@ -105,14 +120,14 @@ const createNewTree = async (
   parentTreeSha: string
 ) => {
   // My custom config. Could be taken as parameters
-  const tree = blobs.map(({ sha }, index) => ({
+  const tree = blobs.map(({sha}, index) => ({
     path: paths[index],
     mode: `100644`,
     type: `blob`,
     sha,
   })) as unknown[]
   //@ts-ignore
-  const { data } = await octo.rest.git.createTree({
+  const {data} = await octo.rest.git.createTree({
     owner,
     repo,
     tree,

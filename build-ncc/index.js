@@ -172,12 +172,29 @@ const uploadToRepo = async (octo, coursePath, org, repo, branch = `master`) => {
     const filesBlobs = await Promise.all(filesPaths.map(createBlobForFile(octo, org, repo)));
     const pathsForBlobs = filesPaths.map(fullPath => path_1.default.relative(coursePath, fullPath));
     core.info(`pathsForBlobs ${JSON.stringify(pathsForBlobs)}`);
-    const newTree = await createNewTree(octo, org, repo, filesBlobs, pathsForBlobs, currentCommit.treeSha);
+    let newTree;
+    try {
+        newTree = await createNewTree(octo, org, repo, filesBlobs, pathsForBlobs, currentCommit.treeSha);
+    }
+    catch (e) {
+        console.log('createNewTree error', e);
+    }
     core.info(`newTree ${JSON.stringify(newTree)}`);
     const commitMessage = `testing commit`;
-    const newCommit = await createNewCommit(octo, org, repo, commitMessage, newTree.sha, currentCommit.commitSha);
+    let newCommit;
+    try {
+        newCommit = await createNewCommit(octo, org, repo, commitMessage, newTree.sha, currentCommit.commitSha);
+    }
+    catch (e) {
+        console.log('createNewCommit error', e);
+    }
     core.info(`newCommit ${JSON.stringify(newCommit)}`);
-    await setBranchToCommit(octo, org, repo, branch, newCommit.sha);
+    try {
+        await setBranchToCommit(octo, org, repo, branch, newCommit.sha);
+    }
+    catch (e) {
+        console.log('setBranchToCommit error', e);
+    }
 };
 exports.uploadToRepo = uploadToRepo;
 const getCurrentCommit = async (octo, org, repo, branch = 'master') => {
