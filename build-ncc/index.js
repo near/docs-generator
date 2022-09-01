@@ -220,11 +220,11 @@ const uploadToRepo = async (octo, coursePath, org, repo, branch = `master`) => {
     }
     const filesPaths = await globber.glob();
     const filesBlobs = await Promise.all(filesPaths.map(createBlobForFile(octo, org, repo)));
-    const pathsForBlobs = filesPaths.map(fullPath => path_1.default.relative(coursePath, fullPath));
-    core.info(`pathsForBlobs ${JSON.stringify(pathsForBlobs)}`);
+    const pathsForCommit = filesPaths.map(fullPath => path_1.default.relative(coursePath, fullPath));
+    core.info(`pathsForCommit ${pathsForCommit.length}`);
     let newTree;
     try {
-        newTree = await createNewTree(octo, org, repo, filesBlobs, pathsForBlobs, currentCommit.treeSha);
+        newTree = await createNewTree(octo, org, repo, filesBlobs, pathsForCommit, currentCommit.treeSha);
     }
     catch (e) {
         console.log('createNewTree error', e);
@@ -268,7 +268,6 @@ const getCurrentCommit = async (octo, org, repo, branch = 'master') => {
 const getFileAsUTF8 = (filePath) => fs_1.promises.readFile(filePath, 'utf8');
 const createBlobForFile = (octo, org, repo) => async (filePath) => {
     const content = await getFileAsUTF8(filePath);
-    core.info(`createBlobForFile filePath ${filePath}`);
     const blobData = await octo.rest.git.createBlob({
         owner: org,
         repo,
@@ -285,6 +284,7 @@ const createNewTree = async (octo, owner, repo, blobs, paths, parentTreeSha) => 
         type: `blob`,
         sha,
     }));
+    console.log('creating tree');
     //@ts-ignore
     const { data } = await octo.rest.git.createTree({
         owner,
@@ -292,6 +292,7 @@ const createNewTree = async (octo, owner, repo, blobs, paths, parentTreeSha) => 
         tree,
         base_tree: parentTreeSha,
     });
+    console.log('tree created');
     return data;
 };
 const createNewCommit = async (octo, org, repo, message, currentTreeSha, currentCommitSha) => (await octo.rest.git.createCommit({
