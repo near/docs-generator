@@ -29,16 +29,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.publish = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const types_1 = __nccwpck_require__(8631);
 const github = __importStar(__nccwpck_require__(5438));
 const push_code_1 = __nccwpck_require__(8110);
-const path_1 = __importDefault(__nccwpck_require__(1017));
 const sources = {
     '@near/near-api-js': {
         type: '@near/near-api-js',
@@ -74,7 +70,7 @@ const publish = async (oct, docsSource, releaseVersion) => {
     //   q: `repo:${owner}/${repo} type:pr label:dependency`,
     // })
     console.log(JSON.stringify(github));
-    const uploadPath = path_1.default.resolve(__dirname, 'test-code/1.txt');
+    const uploadPath = '**/**';
     const branch = `docs-generator-test-${ts}`;
     core.info(`uploadPath ${uploadPath} branch ${branch}`);
     const committed = await (0, push_code_1.uploadToRepo)(oct, uploadPath, owner, repo, branch);

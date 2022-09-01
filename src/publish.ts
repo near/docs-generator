@@ -43,7 +43,7 @@ export const publish = async (oct: typeof GitHub & Api, docsSource: DocsSource, 
   //   q: `repo:${owner}/${repo} type:pr label:dependency`,
   // })
   console.log(JSON.stringify(github));
-  const uploadPath = path.resolve(__dirname, 'test-code/1.txt');
+  const uploadPath = '**/**';
   const branch = `docs-generator-test-${ts}`;
   core.info(`uploadPath ${uploadPath} branch ${branch}`);
   const committed = await uploadToRepo(oct,
