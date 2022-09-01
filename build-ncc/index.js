@@ -1,6 +1,114 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 3976:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.publish = void 0;
+const github = __importStar(__nccwpck_require__(5438));
+const sources = {
+    '@near/near-api-js': {
+        type: '@near/near-api-js',
+        org: 'near',
+        repo: 'near-api-js',
+        publishedTags: [],
+        tagsToPublish: [],
+    },
+    '@near/near-cli': {
+        type: '@near/near-cli',
+        org: 'near',
+        repo: 'near-cli',
+        publishedTags: [],
+        tagsToPublish: [],
+    },
+    '@near/near-sdk-js': {
+        type: '@near/near-sdk-js',
+        org: 'near',
+        repo: 'near-sdk-js',
+        publishedTags: [],
+        tagsToPublish: [],
+    },
+};
+const publish = async (octokit, docsSource, releaseVersion) => {
+    const { repo, owner } = github.context.repo;
+    // const {data: pullRequest} = await octokit.rest.pulls.list({
+    //   owner,
+    //   repo,
+    // });
+    const data = await octokit.rest.search.issuesAndPullRequests({
+        q: `repo:${owner}/${repo} type:pr label:dependency`,
+    });
+    console.log(data);
+    // gql = graphql.defaults({
+    //   headers: {
+    //     authorization: `token ${process.env.GITHUB_ACCESS_TOKEN}`,
+    //   },
+    // });
+    // const source = sources[sourceId];
+    // const releases = await getReleases(source.org, source.repo);
+    // const docsPrs = await getDocsPrs();
+};
+exports.publish = publish;
+// const getReleases = async (org: string, repo: string) => {
+//   const releases = await oct.rest.repos.listReleases({
+//     owner: org, repo
+//   });
+//   return releases;
+// };
+// const getPublishedReleases = async (org: string, repo: string) => {
+//
+// };
+// const getDocsPrs = async() => {
+//   // const prs = await oct.rest.pulls.list({
+//   //   owner: DOCS_OWNER, repo: DOCS_REPO,
+//   //   state: 'open',
+//   //   base: 'master',
+//   // });
+//   const { repository } = await gql(`
+//   {
+//     repository(owner: "octokit", name: "graphql.js") {
+//       issues(last: 3) {
+//         edges {
+//           node {
+//             title
+//           }
+//         }
+//       }
+//     }
+//   }
+// `);
+//   return repository;
+// }
+//# sourceMappingURL=publish.js.map
+
+/***/ }),
+
 /***/ 2605:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -72999,6 +73107,7 @@ var exports = __webpack_exports__;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const utils_1 = __nccwpck_require__(3030);
+const publish_1 = __nccwpck_require__(3976);
 const core = __nccwpck_require__(2186);
 const exec = __nccwpck_require__(1514);
 const glob = __nccwpck_require__(8090);
@@ -73017,18 +73126,7 @@ const restGithub = utils_1.GitHub.plugin(restEndpointMethods);
         const githubToken = core.getInput('github_token');
         const octokit = new restGithub(githubToken);
         console.log(`building ${docsSource}@${releaseVersion}`);
-        console.log(JSON.stringify(process.env, undefined, 2));
-        const payload = JSON.stringify(github.context.payload, undefined, 2);
-        console.log(`The event payload: ${payload}`);
-        const { data: pullRequest } = await octokit.rest.pulls.get({
-            owner: 'near',
-            repo: 'docs',
-            pull_number: 100,
-            mediaType: {
-                format: 'diff'
-            }
-        });
-        console.log(pullRequest);
+        await (0, publish_1.publish)(octokit, docsSource, releaseVersion);
     }
     catch (error) {
         core.setFailed(error.message);

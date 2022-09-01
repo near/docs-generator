@@ -1,4 +1,6 @@
 import {GitHub, getOctokitOptions} from '@actions/github/lib/utils'
+import {DocsSource, ReleaseVersion} from './types';
+import {publish} from './publish';
 
 const core = require('@actions/core');
 const exec = require('@actions/exec');
@@ -14,25 +16,13 @@ const restGithub = GitHub.plugin(restEndpointMethods);
 
 (async () => {
   try {
-    const docsSource = core.getInput('docs-source');
-    const releaseVersion = core.getInput('release-version');
+    const docsSource = core.getInput('docs-source') as DocsSource;
+    const releaseVersion = core.getInput('release-version') as ReleaseVersion;
     const githubToken = core.getInput('github_token');
-
     const octokit = new restGithub(githubToken);
     console.log(`building ${docsSource}@${releaseVersion}`);
-    console.log(JSON.stringify(process.env, undefined, 2))
+    await publish(octokit, docsSource, releaseVersion);
 
-    const payload = JSON.stringify(github.context.payload, undefined, 2);
-    console.log(`The event payload: ${payload}`);
-    const {data: pullRequest} = await octokit.rest.pulls.get({
-      owner: 'near',
-      repo: 'docs',
-      pull_number: 100,
-      mediaType: {
-        format: 'diff'
-      }
-    });
-    console.log(pullRequest);
   } catch (error) {
     core.setFailed(error.message);
   }
