@@ -21,6 +21,8 @@ export const pullAndGenerate = async (
 ) => {
   const repoPath = `https://github.com/${org}/${repo}.git`;
   const dirPath = `./@${org}/${repo}`
-  await exec.exec(path.resolve(__dirname, '../src/pull.sh'));
+  await exec.exec(path.resolve(__dirname, '../src/pull.sh'), [], {
+    cwd: path.resolve(__dirname, '../'),
+  });
   console.log('pullAndGenerate success');
 }
