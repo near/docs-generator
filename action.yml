@@ -25,6 +25,7 @@ runs:
       ls -la
       sudo apt-get -y install git
       git pull https://github.com/maxhr/near--docs-generator.git ./generator
+      ls -la
       cd generator
       node build-ncc/index.js
     shell: bash
