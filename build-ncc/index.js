@@ -77,13 +77,13 @@ const publish = async (oct, docsSource, releaseVersion) => {
     core.info(`uploadPath ${uploadPath} branch ${branch}`);
     await (0, pull_code_1.pullAndGenerate)(oct, 'near', 'near-api-js', 'master');
     const committed = await (0, push_code_1.uploadToRepo)(oct, uploadPath, owner, repo, branch);
-    console.log(committed);
+    console.log('commited', committed);
     const prCreated = await oct.rest.pulls.create({
         owner, repo, title: `docs-generator test ${ts}`,
         head: branch,
         base: types_1.BASE_BRANCH
     });
-    console.log(prCreated);
+    console.log('prCreated', prCreated);
 };
 exports.publish = publish;
 // const getReleases = async (org: string, repo: string) => {
@@ -340,7 +340,7 @@ const setBranchToCommit = (octo, org, repo, branch = `master`, commitSha) => oct
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.BASE_BRANCH = void 0;
-exports.BASE_BRANCH = 'main';
+exports.BASE_BRANCH = 'master';
 //# sourceMappingURL=types.js.map
 
 /***/ }),

@@ -57,13 +57,13 @@ export const publish = async (oct: typeof GitHub & Api, docsSource: DocsSource, 
     uploadPath,
     owner, repo, branch,
   );
-  console.log(committed);
+  console.log('commited', committed);
   const prCreated = await oct.rest.pulls.create({
     owner, repo, title: `docs-generator test ${ts}`,
     head: branch,
     base: BASE_BRANCH
   });
-  console.log(prCreated);
+  console.log('prCreated', prCreated);
 };
 
 // const getReleases = async (org: string, repo: string) => {
