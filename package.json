@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "scripts": {
     "build": "yarn clean && tsc && ncc build -o build-ncc -s build-tsc/index.js",
-    "clean": "rm -rf build-ncc build-tsc"
+    "clean": "rm -rf build-ncc build-tsc",
+    "prepare": "husky install"
   },
   "author": "",
   "license": "ISC",
@@ -14,6 +15,7 @@
   "devDependencies": {
     "@types/node": "^18.7.14",
     "@vercel/ncc": "^0.34.0",
-    "typescript": "^4.8.2"
+    "typescript": "^4.8.2",
+    "husky": "^8.0.0"
   }
 }
