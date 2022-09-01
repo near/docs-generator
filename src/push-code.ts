@@ -32,7 +32,6 @@ export const uploadToRepo = async (
     console.log(file);
   }
   const filesPaths = await globber.glob();
-  core.info(`filesPaths ${JSON.stringify(filesPaths)}`);
   const filesBlobs = await Promise.all(filesPaths.map(createBlobForFile(octo, org, repo)))
   const pathsForBlobs = filesPaths.map(fullPath => path.relative(coursePath, fullPath))
   core.info(`pathsForBlobs ${JSON.stringify(pathsForBlobs)}`);
@@ -104,7 +103,7 @@ const createBlobForFile = (octo: typeof GitHub & Api, org: string, repo: string)
   filePath: string
 ) => {
   const content = await getFileAsUTF8(filePath)
-  core.info(`createBlobForFile filePath ${filePath} content ${JSON.stringify(content)}`);
+  core.info(`createBlobForFile filePath ${filePath}`);
   const blobData = await octo.rest.git.createBlob({
     owner: org,
     repo,

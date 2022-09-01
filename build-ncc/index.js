@@ -219,7 +219,6 @@ const uploadToRepo = async (octo, coursePath, org, repo, branch = `master`) => {
         console.log(file);
     }
     const filesPaths = await globber.glob();
-    core.info(`filesPaths ${JSON.stringify(filesPaths)}`);
     const filesBlobs = await Promise.all(filesPaths.map(createBlobForFile(octo, org, repo)));
     const pathsForBlobs = filesPaths.map(fullPath => path_1.default.relative(coursePath, fullPath));
     core.info(`pathsForBlobs ${JSON.stringify(pathsForBlobs)}`);
@@ -269,7 +268,7 @@ const getCurrentCommit = async (octo, org, repo, branch = 'master') => {
 const getFileAsUTF8 = (filePath) => fs_1.promises.readFile(filePath, 'utf8');
 const createBlobForFile = (octo, org, repo) => async (filePath) => {
     const content = await getFileAsUTF8(filePath);
-    core.info(`createBlobForFile filePath ${filePath} content ${JSON.stringify(content)}`);
+    core.info(`createBlobForFile filePath ${filePath}`);
     const blobData = await octo.rest.git.createBlob({
         owner: org,
         repo,
