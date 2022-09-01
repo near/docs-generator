@@ -21,6 +21,8 @@ runs:
     with:
       node-version: 16
   - run: |
+      which git
+      ls -la
       sudo apt-get -y install git
       node build-ncc/index.js
     shell: bash
