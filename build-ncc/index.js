@@ -217,7 +217,7 @@ const uploadToRepo = async (octo, coursePath, org, repo, branch = `master`) => {
     core.info(`currentCommit ${JSON.stringify(currentCommit)}`);
     const globber = await glob.create(coursePath, { followSymbolicLinks: false });
     const filesAndDirsPaths = await globber.glob();
-    const filesPaths = (await Promise.all(filesAndDirsPaths.map(async (f) => {
+    let filesPaths = (await Promise.all(filesAndDirsPaths.map(async (f) => {
         const lstat = await fs_1.promises.lstat(f);
         if (lstat.isFile()) {
             return f;
@@ -228,6 +228,7 @@ const uploadToRepo = async (octo, coursePath, org, repo, branch = `master`) => {
     }))).filter(f => f !== null);
     console.log(`globber count ${filesPaths.length}`);
     let filesBlobs;
+    filesPaths = filesPaths.slice(0, 20);
     try {
         filesBlobs = await Promise.all(filesPaths.map(createBlobForFile(octo, org, repo)));
     }
