@@ -153,7 +153,7 @@ exports.uploadToRepo = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const glob = __importStar(__nccwpck_require__(8090));
 const path_1 = __importDefault(__nccwpck_require__(1017));
-const fs = __importStar(__nccwpck_require__(7147));
+const fs_1 = __nccwpck_require__(7147);
 const uploadToRepo = async (octo, coursePath, org, repo, branch = `master`) => {
     let currentCommit;
     try {
@@ -212,7 +212,7 @@ const getCurrentCommit = async (octo, org, repo, branch = 'master') => {
     };
 };
 // Notice that readFile's utf8 is typed differently from Github's utf-8
-const getFileAsUTF8 = (filePath) => fs.readFile.__promisify__(filePath, 'utf8');
+const getFileAsUTF8 = (filePath) => fs_1.promises.readFile(filePath, 'utf8');
 const createBlobForFile = (octo, org, repo) => async (filePath) => {
     const content = await getFileAsUTF8(filePath);
     core.info(`createBlobForFile filePath ${filePath} content ${JSON.stringify(content)}`);

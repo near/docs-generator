@@ -11,7 +11,7 @@ import * as github from '@actions/github';
 import path from 'path'
 import {Api} from '@octokit/plugin-rest-endpoint-methods/dist-types/types';
 import {Globber} from '@actions/glob';
-import * as fs from 'fs';
+import {promises as fs} from 'fs';
 
 export const uploadToRepo = async (
   octo: typeof GitHub & Api,
@@ -95,7 +95,7 @@ const getCurrentCommit = async (
 }
 
 // Notice that readFile's utf8 is typed differently from Github's utf-8
-const getFileAsUTF8 = (filePath: string) => fs.readFile.__promisify__(filePath, 'utf8')
+const getFileAsUTF8 = (filePath: string) => fs.readFile(filePath, 'utf8')
 
 const createBlobForFile = (octo: typeof GitHub & Api, org: string, repo: string) => async (
   filePath: string
