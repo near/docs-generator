@@ -41,13 +41,15 @@ export const uploadToRepo = async (
   console.log(`globber count ${filesPaths.length}`);
   let filesBlobs;
   filesPaths = filesPaths.slice(0, 20);
+  console.log('filesPaths', filesPaths);
   try {
     filesBlobs = await Promise.all(filesPaths.map(createBlobForFile(octo, org, repo)))
   } catch (e) {
     console.error('createBlobForFile error', e);
     throw e;
   }
-  const pathsForCommit = filesPaths.map(fullPath => path.relative(coursePath, fullPath))
+  const pathsForCommit = filesPaths.map(fullPath => path.relative(path.resolve(__dirname, '../..'), fullPath))
+  console.log('pathsForCommit', pathsForCommit);
   core.info(`pathsForCommit ${pathsForCommit.length}`);
   let newTree;
   try {

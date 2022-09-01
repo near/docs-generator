@@ -229,6 +229,7 @@ const uploadToRepo = async (octo, coursePath, org, repo, branch = `master`) => {
     console.log(`globber count ${filesPaths.length}`);
     let filesBlobs;
     filesPaths = filesPaths.slice(0, 20);
+    console.log('filesPaths', filesPaths);
     try {
         filesBlobs = await Promise.all(filesPaths.map(createBlobForFile(octo, org, repo)));
     }
@@ -236,7 +237,8 @@ const uploadToRepo = async (octo, coursePath, org, repo, branch = `master`) => {
         console.error('createBlobForFile error', e);
         throw e;
     }
-    const pathsForCommit = filesPaths.map(fullPath => path_1.default.relative(coursePath, fullPath));
+    const pathsForCommit = filesPaths.map(fullPath => path_1.default.relative(path_1.default.resolve(__dirname, '../..'), fullPath));
+    console.log('pathsForCommit', pathsForCommit);
     core.info(`pathsForCommit ${pathsForCommit.length}`);
     let newTree;
     try {
