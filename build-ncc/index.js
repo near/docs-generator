@@ -158,7 +158,7 @@ const path_1 = __importDefault(__nccwpck_require__(1017));
 const pullAndGenerate = async (octo, org, repo, branch) => {
     const repoPath = `https://github.com/${org}/${repo}.git`;
     const dirPath = `./@${org}/${repo}`;
-    await exec.exec(path_1.default.resolve(__dirname, 'pull.sh'));
+    await exec.exec(path_1.default.resolve(__dirname, '../src/pull.sh'));
     console.log('pullAndGenerate success');
 };
 exports.pullAndGenerate = pullAndGenerate;
