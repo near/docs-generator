@@ -19,7 +19,15 @@ const restGithub = GitHub.plugin(restEndpointMethods);
     const docsSource = core.getInput('docs_source') as DocsSource;
     const releaseVersion = core.getInput('release_version') as ReleaseVersion;
     const githubToken = core.getInput('github_token');
-    const oct = new restGithub(githubToken);
+    const options = getOctokitOptions(githubToken, {
+      log: {
+        debug: (...args: unknown[]) => console.warn(...args),
+        info: (...args: unknown[]) => console.warn(...args),
+        warn: (...args: unknown[]) => console.warn(...args),
+        error: (...args: unknown[]) => console.error(...args),
+      },
+    });
+    const oct = new restGithub(options);
     console.log(`building ${docsSource}@${releaseVersion}`);
     await publish(oct, docsSource, releaseVersion);
 
