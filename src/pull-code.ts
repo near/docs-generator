@@ -21,12 +21,6 @@ export const pullAndGenerate = async (
 ) => {
   const repoPath = `https://github.com/${org}/${repo}.git`;
   const dirPath = `./@${org}/${repo}`
-  await exec.exec(`
-  git clone ${repoPath} ${dirPath}
-  cd ${dirPath}
-  yarn install
-  cd docs
-  ./build.sh
-  `);
+  await exec.exec(path.resolve(__dirname, 'pull.sh'));
   console.log('pullAndGenerate success');
 }

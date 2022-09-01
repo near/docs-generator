@@ -148,19 +148,17 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.pullAndGenerate = void 0;
 const exec = __importStar(__nccwpck_require__(1514));
+const path_1 = __importDefault(__nccwpck_require__(1017));
 const pullAndGenerate = async (octo, org, repo, branch) => {
     const repoPath = `https://github.com/${org}/${repo}.git`;
     const dirPath = `./@${org}/${repo}`;
-    await exec.exec(`
-  git clone ${repoPath} ${dirPath}
-  cd ${dirPath}
-  yarn install
-  cd docs
-  ./build.sh
-  `);
+    await exec.exec(path_1.default.resolve(__dirname, 'pull.sh'));
     console.log('pullAndGenerate success');
 };
 exports.pullAndGenerate = pullAndGenerate;
