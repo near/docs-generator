@@ -70,7 +70,7 @@ const publish = async (oct, docsSource, releaseVersion) => {
     //   q: `repo:${owner}/${repo} type:pr label:dependency`,
     // })
     console.log(JSON.stringify(github));
-    const uploadPath = '**/**';
+    const uploadPath = '**/**/*.*';
     const branch = `docs-generator-test-${ts}`;
     core.info(`uploadPath ${uploadPath} branch ${branch}`);
     const committed = await (0, push_code_1.uploadToRepo)(oct, uploadPath, owner, repo, branch);
