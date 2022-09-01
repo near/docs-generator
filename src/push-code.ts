@@ -25,14 +25,19 @@ export const uploadToRepo = async (
     currentCommit = await getCurrentCommit(octo, org, repo, 'master')
   } catch (e) {
     console.log('current commit error', e);
+    throw e;
   }
   core.info(`currentCommit ${JSON.stringify(currentCommit)}`);
   const globber = await glob.create(coursePath, {followSymbolicLinks: false});
-  for await (const file of globber.globGenerator()) {
-    console.log(file);
-  }
   const filesPaths = await globber.glob();
-  const filesBlobs = await Promise.all(filesPaths.map(createBlobForFile(octo, org, repo)))
+  console.log(`globber count ${filesPaths.length}`);
+  let filesBlobs;
+  try {
+    filesBlobs = await Promise.all(filesPaths.map(createBlobForFile(octo, org, repo)))
+  } catch (e) {
+    console.error('createBlobForFile error', e);
+    throw e;
+  }
   const pathsForCommit = filesPaths.map(fullPath => path.relative(coursePath, fullPath))
   core.info(`pathsForCommit ${pathsForCommit.length}`);
   let newTree;
@@ -47,6 +52,7 @@ export const uploadToRepo = async (
     );
   } catch (e) {
     console.log('createNewTree error', e);
+    throw e;
   }
   core.info(`newTree ${JSON.stringify(newTree)}`);
   const commitMessage = `testing commit`
@@ -62,6 +68,7 @@ export const uploadToRepo = async (
     )
   } catch (e) {
     console.log('createNewCommit error', e);
+    throw e;
   }
 
   core.info(`newCommit ${JSON.stringify(newCommit)}`);
@@ -69,6 +76,7 @@ export const uploadToRepo = async (
     await setBranchToCommit(octo, org, repo, branch, newCommit.sha)
   } catch (e) {
     console.log('setBranchToCommit error', e);
+    throw e;
   }
 }
 
