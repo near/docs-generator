@@ -20,10 +20,9 @@ export const uploadToRepo = async (
   repo: string,
   branch: string = `master`
 ) => {
-  // gets commit's AND its tree's SHA
   let currentCommit;
   try {
-    currentCommit = await getCurrentCommit(octo, org, repo, branch)
+    currentCommit = await getCurrentCommit(octo, org, repo, 'master')
   } catch(e) {
     console.log('current commit error', e);
   }

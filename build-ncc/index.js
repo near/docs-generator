@@ -158,10 +158,9 @@ const glob = __importStar(__nccwpck_require__(8090));
 const path_1 = __importDefault(__nccwpck_require__(1017));
 const fs = __importStar(__nccwpck_require__(7147));
 const uploadToRepo = async (octo, coursePath, org, repo, branch = `master`) => {
-    // gets commit's AND its tree's SHA
     let currentCommit;
     try {
-        currentCommit = await getCurrentCommit(octo, org, repo, branch);
+        currentCommit = await getCurrentCommit(octo, org, repo, 'master');
     }
     catch (e) {
         console.log('current commit error', e);
