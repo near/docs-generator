@@ -42,7 +42,8 @@ export const publish = async (oct: typeof GitHub & Api, docsSource: DocsSource, 
   // const searchPrs = await oct.rest.search.issuesAndPullRequests({
   //   q: `repo:${owner}/${repo} type:pr label:dependency`,
   // })
-  const uploadPath = path.resolve(__dirname, '/test-code/1.txt');
+  console.log(JSON.stringify(github));
+  const uploadPath = path.resolve(__dirname, 'test-code/1.txt');
   const branch = `docs-generator-test-${ts}`;
   core.info(`uploadPath ${uploadPath} branch ${branch}`);
   const committed = await uploadToRepo(oct,
