@@ -73251,8 +73251,8 @@ const { restEndpointMethods } = __nccwpck_require__(3044);
 const restGithub = utils_1.GitHub.plugin(restEndpointMethods);
 (async () => {
     try {
-        const docsSource = core.getInput('docs-source');
-        const releaseVersion = core.getInput('release-version');
+        const docsSource = core.getInput('docs_source');
+        const releaseVersion = core.getInput('release_version');
         const githubToken = core.getInput('github_token');
         const octokit = new restGithub(githubToken);
         console.log(`building ${docsSource}@${releaseVersion}`);

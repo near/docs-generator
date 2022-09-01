@@ -16,8 +16,8 @@ const restGithub = GitHub.plugin(restEndpointMethods);
 
 (async () => {
   try {
-    const docsSource = core.getInput('docs-source') as DocsSource;
-    const releaseVersion = core.getInput('release-version') as ReleaseVersion;
+    const docsSource = core.getInput('docs_source') as DocsSource;
+    const releaseVersion = core.getInput('release_version') as ReleaseVersion;
     const githubToken = core.getInput('github_token');
     const octokit = new restGithub(githubToken);
     console.log(`building ${docsSource}@${releaseVersion}`);
