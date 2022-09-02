@@ -15,13 +15,20 @@ inputs:
     required: false
     default: '${{ github.token }}'
 runs:
-  using: 'composite'
-  steps:
-  - uses: actions/setup-node@v3
-    with:
-      node-version: 16
-  - run: |
-      git clone https://github.com/maxhr/near--docs-generator.git ./generator
-      cd generator
-      node build-ncc/index.js ${{ inputs.docs_source }} ${{ inputs.release_version }} ${{ inputs.github_token }}
-    shell: bash
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.docs_source }}
+    - ${{ inputs.release_version }}
+    - ${{ inputs.github_token }}
+#runs:
+#  using: 'composite'
+#  steps:
+#  - uses: actions/setup-node@v3
+#    with:
+#      node-version: 16
+#  - run: |
+#      git clone https://github.com/maxhr/near--docs-generator.git ./generator
+#      cd generator
+#      node build-ncc/index.js ${{ inputs.docs_source }} ${{ inputs.release_version }} ${{ inputs.github_token }}
+#    shell: bash

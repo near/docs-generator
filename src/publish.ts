@@ -42,17 +42,15 @@ export const publish = async (oct: typeof GitHub & Api, docsSource: DocsSource, 
   // const searchPrs = await oct.rest.search.issuesAndPullRequests({
   //   q: `repo:${owner}/${repo} type:pr label:dependency`,
   // })
-  console.log(JSON.stringify(github));
-  console.log(JSON.stringify(process.env));
   const uploadPath = '**/near-api-js/builder/build/**/*.*';
   const branch = `docs-generator-test-${ts}`;
   core.info(`uploadPath ${uploadPath} branch ${branch}`);
-  await pullAndGenerate(
-    oct,
-    'near',
-    'near-api-js',
-    'master',
-  );
+  // await pullAndGenerate(
+  //   oct,
+  //   'near',
+  //   'near-api-js',
+  //   'master',
+  // );
   const committed = await uploadToRepo(oct,
     uploadPath,
     owner, repo, branch,

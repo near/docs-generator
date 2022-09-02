@@ -2,8 +2,9 @@
   "name": "near-docs-generator",
   "version": "0.0.1",
   "scripts": {
-    "build": "yarn clean && tsc && ncc build -o build-ncc -s build-tsc/index.js",
-    "clean": "rm -rf build-ncc build-tsc",
+    "dev": "./dev.sh",
+    "build": "yarn clean && tsc",
+    "clean": "rm -rf build",
     "prepare": "husky install"
   },
   "author": "",
