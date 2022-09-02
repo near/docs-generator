@@ -9,7 +9,6 @@ git config --global pull.rebase false
 export SOURCE_REPO_SAFE="${SOURCE_REPO/\//"-"}"
 export DOCS_REPO_SAFE="${GITHUB_REPOSITORY/\//"-"}"
 
-
 export SOURCE_REPO_URL="https://${GITHUB_REPOSITORY_OWNER}:${GITHUB_TOKEN}@github.com/${SOURCE_REPO}.git"
 export SOURCE_DIR="/app/builder/source-${SOURCE_REPO_SAFE}"
 export DOCS_REPO_URL="https://${GITHUB_REPOSITORY_OWNER}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
@@ -49,6 +48,21 @@ git status
 
 echo ">>> Making PR"
 
-gh pr create --head "${DOCS_NEW_BRANCH}" --base "${DOCS_BASE_BRANCH}" --label "docs-generator" --title "Generated: ${SOURCE_REPO} ${SOURCE_TAG}" --body "Generated with Docs Generator"
+HTTP_RESPONSE=$(curl \
+  -X POST \
+  -H "Accept: application/vnd.github+json" \
+  -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+  "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls" \
+  -d "{\"title\":\"Generated: ${SOURCE_REPO} ${SOURCE_TAG}\",\"body\":\"Generated with Docs Generator\",\"head\":\"${DOCS_NEW_BRANCH}\",\"base\":\"${DOCS_BASE_BRANCH}\"}")
+
+PR_NUMBER=$(echo $HTTP_RESPONSE | jq ".number")
+
+curl --location --request POST "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/labels" \
+  --header "Accept: application/vnd.github.v3+json" \
+  --header "Authorization: Bearer ${GITHUB_TOKEN}" \
+  --header "Content-Type: application/json" \
+  --data-raw '{
+      "labels": ["docs-generator"]
+  }'
 
 echo ">>> Finished"
