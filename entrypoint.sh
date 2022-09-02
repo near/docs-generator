@@ -7,12 +7,12 @@ git config --global user.name "NEAR Docs Generator"
 git config --global pull.rebase false
 
 export SOURCE_REPO_SAFE="${SOURCE_REPO/\//"-"}"
-export DOCS_REPO_SAFE="${DOCS_REPO/\//"-"}"
+export DOCS_REPO_SAFE="${GITHUB_REPOSITORY/\//"-"}"
 
 
-export SOURCE_REPO_URL="https://${REPOS_OWNER}:${GITHUB_TOKEN}@github.com/${SOURCE_REPO}.git"
+export SOURCE_REPO_URL="https://${GITHUB_REPOSITORY_OWNER}:${GITHUB_TOKEN}@github.com/${SOURCE_REPO}.git"
 export SOURCE_DIR="/app/builder/source-${SOURCE_REPO_SAFE}"
-export DOCS_REPO_URL="https://${REPOS_OWNER}:${GITHUB_TOKEN}@github.com/${DOCS_REPO}.git"
+export DOCS_REPO_URL="https://${GITHUB_REPOSITORY_OWNER}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
 export DOCS_DIR="/app/builder/docs-${DOCS_REPO_SAFE}"
 export DOCS_TARGET_DIR="${DOCS_DIR}/generated/${DOCS_REPO_SAFE}/${SOURCE_TAG}"
 export GENERATED_DOCS_DIR=/app/builder/docs
