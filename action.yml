@@ -21,8 +21,8 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   env:
-    REPOS_OWNER: ${{ github.context.repo.owner }}
-    DOCS_REPO: ${{ github.context.repo.repo }}
+    REPOS_OWNER: ${{ context.repo.owner }}
+    DOCS_REPO: ${{ context.repo.repo }}
     SOURCE_REPO: ${{ inputs.source_repo }}
     BUILDER_NAME: ${{ inputs.builder_name }}
     SOURCE_TAG: ${{ inputs.release_version }}
