@@ -1,6 +1,6 @@
 #!/bin/sh -l
 
-set -x
+set -ex
 
 git config --global user.email "docs-generator@near"
 git config --global user.name "NEAR Docs Generator"
@@ -12,7 +12,7 @@ export SOURCE_BUILD_SCRIPT=./docs/build.sh
 export GENERATED_DOCS_DIR="/work/${SOURCE_NAME}/builder/docs"
 export DOCS_REPO="https://maxhr:${GITHUB_TOKEN}@github.com/maxhr/${DOCS_REPO_NAME}.git"
 export DOCS_DIR=/work/docs
-export DOCS_TARGET_DIR="/work/docs/generated/${SOURCE_NAME}"
+export DOCS_TARGET_DIR="/work/docs/generated/${SOURCE_NAME}/${SOURCE_TAG}"
 export DOCS_NEW_BRANCH="docs-generator/${SOURCE_NAME}/${SOURCE_TAG}/$(date +"%y%m%d_%H%M%S")"
 export DOCS_BASE_BRANCH="master"
 
