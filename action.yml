@@ -4,11 +4,14 @@ branding:
   icon: book-open
   color: green
 inputs:
-  docs_source:
+  source_repo:
     description: 'Source repo to generate docs for'
     required: true
   release_version:
     description: 'Release version'
+    required: true
+  builder_name:
+    description: 'Builder script file'
     required: true
   github_token:
     description: 'GITHUB_TOKEN'
@@ -18,18 +21,9 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   env:
-    SOURCE_NAME: ${{ inputs.docs_source }}
+    REPOS_OWNER: ${{ github.context.repo.owner }}
+    DOCS_REPO: ${{ github.context.repo.repo }}
+    SOURCE_REPO: ${{ inputs.source_repo }}
+    BUILDER_NAME: ${{ inputs.builder_name }}
     SOURCE_TAG: ${{ inputs.release_version }}
     GITHUB_TOKEN: ${{ inputs.github_token }}
-    DOCS_REPO_NAME: "near--docs"
-#runs:
-#  using: 'composite'
-#  steps:
-#  - uses: actions/setup-node@v3
-#    with:
-#      node-version: 16
-#  - run: |
-#      git clone https://github.com/maxhr/near--docs-generator.git ./generator
-#      cd generator
-#      node build-ncc/index.js ${{ inputs.docs_source }} ${{ inputs.release_version }} ${{ inputs.github_token }}
-#    shell: bash

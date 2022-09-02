@@ -1,8 +1,10 @@
 #!/bin/sh -l
 
-docker build -t docs-generator . && docker run -it --entrypoint /bin/bash docs-generator
-
-# export DOCS_REPO_NAME="near--docs"
-# export SOURCE_NAME="near--near-api-js"
-# export SOURCE_TAG="v2.0.0"
-# export GITHUB_TOKEN="$(cat ~/.github-token)"
+docker build -t docs-generator . && docker run -it --entrypoint /bin/bash \
+  -e REPOS_OWNER="maxhr" \
+  -e DOCS_REPO="near--docs" \
+  -e SOURCE_REPO="near--near-api-js" \
+  -e BUILDER_NAME="near-api-js" \
+  -e SOURCE_TAG="v2.0.0" \
+  -e GITHUB_TOKEN="$(cat ~/.github-token)" \
+  docs-generator
