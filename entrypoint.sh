@@ -1,6 +1,6 @@
 #!/bin/sh -l
 
-set -ex
+set -x
 
 git config --global user.email "docs-generator@near"
 git config --global user.name "NEAR Docs Generator"
