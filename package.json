@@ -3,8 +3,6 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "./dev.sh",
-    "build": "yarn clean && tsc",
-    "clean": "rm -rf build",
     "prepare": "husky install"
   },
   "author": "",

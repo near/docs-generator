@@ -13,11 +13,5 @@ RUN npm install -g yarn
 
 WORKDIR /app
 
-COPY package*.json tsconfig.json ./
-RUN yarn install
-
-COPY src ./src
-RUN yarn build
-
 COPY entrypoint.sh ./
 ENTRYPOINT ["/app/entrypoint.sh"]

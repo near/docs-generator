@@ -17,10 +17,11 @@ inputs:
 runs:
   using: 'docker'
   image: 'Dockerfile'
-  args:
-    - ${{ inputs.docs_source }}
-    - ${{ inputs.release_version }}
-    - ${{ inputs.github_token }}
+  env:
+    SOURCE_NAME: ${{ inputs.docs_source }}
+    SOURCE_TAG: ${{ inputs.release_version }}
+    GITHUB_TOKEN: ${{ inputs.github_token }}
+    DOCS_REPO_NAME: "near--docs"
 #runs:
 #  using: 'composite'
 #  steps:
