@@ -1,0 +1,13 @@
+{
+  "name": "near-docs-generator-github-app",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "probot run ./app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "probot": "^12.2.7"
+  },
+  "devDependencies": {}
+}
