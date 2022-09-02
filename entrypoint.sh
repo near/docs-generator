@@ -47,6 +47,6 @@ git status
 
 echo ">>> Making PR"
 
-gh pr create --head "${DOCS_NEW_BRANCH}" --base "${DOCS_BASE_BRANCH}" --label "docs-generator" --title "Generated: ${SOURCE_NAME}" --body "Generated with Docs Generator"
+gh pr create --head "${DOCS_NEW_BRANCH}" --base "${DOCS_BASE_BRANCH}" --label "docs-generator" --title "Generated: ${SOURCE_NAME} ${SOURCE_TAG}" --body "${SOURCE_NAME} ${SOURCE_TAG}\nGenerated with Docs Generator"
 
 echo ">>> Finished"
