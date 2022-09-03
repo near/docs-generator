@@ -2,6 +2,8 @@
 
 set -ex
 
+. ./builder/funcs.sh
+
 git config --global user.email "docs-generator@near"
 git config --global user.name "NEAR Docs Generator"
 git config --global pull.rebase false
@@ -18,51 +20,9 @@ export GENERATED_DOCS_DIR=/app/builder/docs
 export DOCS_NEW_BRANCH="docs-generator/${SOURCE_REPO_SAFE}/${SOURCE_TAG}/$(date +"%y%m%d_%H%M%S")"
 export DOCS_BASE_BRANCH="master"
 
-echo ">>> Pulling repos"
-git clone "${SOURCE_REPO_URL}" "${SOURCE_DIR}"
-git clone "${DOCS_REPO_URL}" "${DOCS_DIR}"
+export GH_HTTP_AUTH="Authorization: Bearer ${GITHUB_TOKEN}"
 
-cd "${SOURCE_DIR}"
-
-git checkout "tags/${SOURCE_TAG}" -b "${SOURCE_TAG}"
-echo ">>> Running yarn install for source"
-yarn install
-
-echo ">>> Running docs builder script"
-eval "/app/builder/${BUILDER_NAME}.sh"
-echo ">>> Pushing docs"
-cd "${DOCS_DIR}"
-git status
-git checkout -b "${DOCS_NEW_BRANCH}"
-rm -rf "${DOCS_TARGET_DIR}"
-mkdir -p "${DOCS_TARGET_DIR}"
-git status
-cp -r "${GENERATED_DOCS_DIR}/." "${DOCS_TARGET_DIR}"
-git status
-git add .
-git status
-git commit -m "${SOURCE_REPO_SAFE} docs"
-git status
-git push -u origin "${DOCS_NEW_BRANCH}"
-git status
-
-echo ">>> Making PR"
-
-HTTP_RESPONSE=$(curl \
-  -X POST \
-  -H "Accept: application/vnd.github+json" \
-  -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-  "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls" \
-  -d "{\"title\":\"Generated: ${SOURCE_REPO} ${SOURCE_TAG}\",\"body\":\"Generated with Docs Generator\",\"head\":\"${DOCS_NEW_BRANCH}\",\"base\":\"${DOCS_BASE_BRANCH}\"}")
-
-PR_NUMBER=$(echo $HTTP_RESPONSE | jq ".number")
-
-curl --location --request POST "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/labels" \
-  --header "Accept: application/vnd.github.v3+json" \
-  --header "Authorization: Bearer ${GITHUB_TOKEN}" \
-  --header "Content-Type: application/json" \
-  --data-raw '{
-      "labels": ["docs-generator"]
-  }'
-
-echo ">>> Finished"
+pull
+build_docs
+push
+github_pr
