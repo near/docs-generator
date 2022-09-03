@@ -2,7 +2,7 @@
 
 set -ex
 
-. ./builder/funcs.sh
+. /app/builder/funcs.sh
 
 git config --global user.email "docs-generator@near"
 git config --global user.name "NEAR Docs Generator"
