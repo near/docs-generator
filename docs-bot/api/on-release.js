@@ -2,8 +2,7 @@ const { createProbot } = require("probot");
 
 module.exports = async function handler(req, res) {
   const probot = createProbot();
-  if (req.headers["authorization"] !== `Bearer ${process.env.DOCS_BOT_SECRET}`) {
-    console.log(JSON.stringify(req.headers));
+  if (req.headers["bot-auth"] !== `${process.env.DOCS_BOT_SECRET}`) {
     res.status(401);
     res.send('401');
     res.end();
