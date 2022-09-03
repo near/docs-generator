@@ -11,5 +11,6 @@ WORKDIR /app
 COPY builder ./builder
 RUN cd builder && yarn install
 
+COPY shell-scripts ./shell-scripts
 COPY entrypoint.sh ./
 ENTRYPOINT ["/app/entrypoint.sh"]

@@ -1,14 +1,14 @@
 log () {
-  echo "\e[1;36m>>>>> ${1}"
+  echo ">>>>> ${1}"
 }
 
 pull() {
   log "Pulling repos"
 
-  git clone "${SOURCE_REPO_URL}" "${SOURCE_DIR}"
-  git clone "${DOCS_REPO_URL}" "${DOCS_DIR}"
+  git clone "${SOURCE_REPO_URL}" "${SOURCE_DIR}" --verbose
+  git clone "${DOCS_REPO_URL}" "${DOCS_DIR}" --verbose
 
-  cd "${SOURCE_DIR}" || log "No source dir" && exit 243
+  cd "${SOURCE_DIR}" || (log "No source dir" && exit 201)
 
   git checkout "tags/${SOURCE_TAG}" -b "${SOURCE_TAG}"
 
@@ -29,9 +29,9 @@ build_docs() {
 push() {
   log "Pushing docs"
 
-  cd "${DOCS_DIR}" || log "No docs dir" && exit 243
+  cd "${DOCS_DIR}" || (log "No docs dir" && exit 202)
 
-  git status
+  git status -v -v
   git checkout -b "${DOCS_NEW_BRANCH}"
 
   log "(Over)write files to target docs dir"
@@ -39,9 +39,9 @@ push() {
   mkdir -p "${DOCS_TARGET_DIR}"
   cp -r "${GENERATED_DOCS_DIR}/." "${DOCS_TARGET_DIR}"
 
-  git add .
+  git add . --verbose
   git commit -m "${SOURCE_REPO_SAFE} docs"
-  git push -u origin "${DOCS_NEW_BRANCH}"
+  git push -u origin "${DOCS_NEW_BRANCH}" --verbose
 
   log "Done pushing"
 }
@@ -65,7 +65,7 @@ github_pr() {
 
   if [ "${PR_NUMBER}" == "null" ]; then
     log "PR number is null"
-    exit 243
+    exit 203
   fi
 
   log "Labeling PR"
