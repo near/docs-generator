@@ -10,7 +10,7 @@ const config = {
       {
         entryPoints: process.env.DOCS_ENTRY_POINT.split(','),
         tsconfig: process.env.DOCS_TS_CONFIG,
-        name: 'NEAR JavaScript API',
+        name: process.env.DOCS_NAME,
         includeVersion: true,
         entryPointStrategy: 'expand',
         excludeNotDocumented: false,
