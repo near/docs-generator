@@ -1,8 +1,19 @@
-#!/bin/sh
+#!/bin/sh -l
 
-export DOCS_ENTRY_POINT='./sources/near-api-js/packages/near-api-js/src'
-export DOCS_TS_CONFIG='./sources/near-api-js/packages/near-api-js/tsconfig.json'
-export DOCS_BASE_PATH='./sources/near-api-js/packages/near-api-js/src'
-export DOCS_README='./sources/near-api-js/docs/README_TYPEDOC.md'
+#docker build -t docs-generator . && docker run \
+#  -e GITHUB_REPOSITORY_OWNER="maxhr" \
+#  -e GITHUB_REPOSITORY="maxhr/near--docs" \
+#  -e SOURCE_REPO="maxhr/near--near-api-js" \
+#  -e BUILDER_NAME="near-api-js" \
+#  -e SOURCE_TAG="v2.0.0" \
+#  -e GITHUB_TOKEN="$(cat ~/.github-token)" \
+#  docs-generator
 
-docusaurus "$1"
+docker build -t docs-generator . && docker run \
+  -e GITHUB_REPOSITORY_OWNER="maxhr" \
+  -e GITHUB_REPOSITORY="maxhr/near--docs" \
+  -e SOURCE_REPO="near/near-sdk-js" \
+  -e BUILDER_NAME="near-sdk-js" \
+  -e SOURCE_TAG="v0.4.0" \
+  -e GITHUB_TOKEN="$(cat ~/.github-token)" \
+  docs-generator

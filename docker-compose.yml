@@ -1,0 +1,11 @@
+version: "3.4"
+
+services:
+  docs-gen:
+    container_name: docs-gen
+    build:
+      dockerfile: Dockerfile
+      context: .
+    working_dir: /app
+    stdin_open: true
+    tty: true
