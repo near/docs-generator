@@ -2,7 +2,7 @@ const { createProbot } = require("probot");
 
 module.exports = async function handler(req, res) {
   const probot = createProbot();
-  if (req.headers["bot-auth"] !== `${process.env.DOCS_BOT_SECRET}`) {
+  if (!req.headers || req.headers["bot-auth"] !== `${process.env.DOCS_BOT_SECRET}`) {
     res.status(401);
     res.send('401');
     res.end();
@@ -20,13 +20,15 @@ module.exports = async function handler(req, res) {
     res.end();
     return;
   } else {
+    const docsOwner = process.env.APP_REPO_OWNER || 'near';
+    const docsRepo = process.env.APP_REPO_NAME || 'docs';
     const [owner, repo] = req.body["client_payload"]["source_repo"].split('/');
     // Use app level scope to find our installation id
     console.log(">>>>>>> req.body", req.body);
     let app_client = await probot.auth();
     let { data } = await app_client.apps.getRepoInstallation({
-      owner: 'maxhr',
-      repo: 'near--docs',
+      owner: docsOwner,
+      repo: docsRepo,
     });
     console.log(">>>>>>> data", data)
     // Use installation scope to fire the repository_dispatch
@@ -34,8 +36,8 @@ module.exports = async function handler(req, res) {
     let client = await probot.auth(data.id);
     try {
       const dispatchResponse = await client.repos.createDispatchEvent({
-        owner: 'maxhr',
-        repo: 'near--docs',
+        owner: docsOwner,
+        repo: docsRepo,
         event_type: req.body["event_type"],
         client_payload: req.body["client_payload"],
       });

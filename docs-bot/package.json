@@ -2,7 +2,7 @@
   "name": "docs-bot",
   "version": "0.0.1",
   "scripts": {
-    "start": "probot run ./api/on-release.js"
+    "start": "vercel start"
   },
   "dependencies": {
     "express": "^4.18.1",
