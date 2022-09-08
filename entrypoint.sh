@@ -25,4 +25,4 @@ export GH_HTTP_AUTH="Authorization: Bearer ${GITHUB_TOKEN}"
 pull
 build_docs
 push
-github_pr
+set_action_output

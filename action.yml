@@ -17,6 +17,10 @@ inputs:
     description: 'GITHUB_TOKEN'
     required: false
     default: '${{ github.token }}'
+outputs:
+  new_branch_name:
+    description: 'Branch that was created after build and push'
+
 runs:
   using: 'docker'
   image: 'Dockerfile'

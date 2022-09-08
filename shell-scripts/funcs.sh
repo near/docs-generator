@@ -102,3 +102,8 @@ github_pr() {
 
   log "Finished PR"
 }
+
+set_action_output() {
+  log "Setting action output"
+  echo "::set-output name=new_branch_name::${DOCS_NEW_BRANCH}"
+}

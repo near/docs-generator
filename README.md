@@ -23,21 +23,15 @@ Inputs:
 
 The app (`./docs-bot`), is published on Vercel (https://docs-bot.vercel.app).
 
-It's (current) purpose is to trigger `repository_dispatch` in the docs repo.
-
-This is done with an App because GitHub doesn't allow triggering `repository_dispatch` from inside the workflow cross-repos, 
-unless you provide a Personal Access Token, which gives too much permissions to the workflow.
-A GitHub app limits the permissions only the repo it's installed on.
+It's purpose is to trigger `repository_dispatch` and create PRs in the docs repo.
 
 It should be installed on the docs repo and its `https://docs-bot.vercel.app/api/on-release` endpoint can be called
-from `near/near-api-js` (and others) workflow when a new version get released. This is to be able to trigger docs build
+from source-code repos workflow when a new version get released. This is to be able to trigger docs build
 automatically. You can also invoke the GitHub action (described above) manually with `workflow_dispatch` event.
 
 See the workflows in the docs repo to see how it's configured for manual and automatic listeners.
 
 See the workflows in `near-api-js` repo to see how it's being triggered automatically.
-
-The endpoint must receive a secret token `DOCS_BOT_SECRET`.
 
 ## Contributing
 
@@ -50,7 +44,7 @@ Make sure you have it in your `~/.github-token`.
 - `GITHUB_REPOSITORY` - `near/docs` or your fork
 - `SOURCE_REPO` - for example `near/near-api-js`
 - `BUILDER_NAME` - at the moment `near-api-js` others soon. This will run `builder/near-api-js.sj`
-- `SOURCE_TAG` - the published package version to checkot (ex: `v1.0.0`)
+- `SOURCE_TAG` - the published package version to checkout (ex: `v1.0.0`)
 - `GITHUB_TOKEN` - access token. GitHub provides it in Action Workflow. For local dev you need a Personal Access Token.
 
 `./dev-attach.sh` will run attach to the container, without running the entrypoint file.
