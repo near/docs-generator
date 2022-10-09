@@ -10,8 +10,13 @@ pull() {
 
   cd "${SOURCE_DIR}" || (log "No source dir" && exit 201)
   git checkout "tags/${SOURCE_TAG}" -b "${SOURCE_TAG}"
-  log "Running yarn install for source"
-  yarn install
+  log "Running packages install for source"
+  if [ "${BUILDER_NAME}" == "near-api-js" ]; then
+    npm i -g pnpm
+    pnpm install
+  else
+    yarn install
+  fi
 
   log "Running yarn install for docs website"
   cd "${DOCS_DIR}/website" || (log "No website dir" && exit 208)
